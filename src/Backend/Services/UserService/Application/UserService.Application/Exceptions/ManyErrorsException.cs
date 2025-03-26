@@ -1,11 +1,14 @@
-﻿namespace UserService.Application.Exceptions;
+﻿using UserService.Application.ViewModels;
+
+namespace UserService.Application.Exceptions;
 
 public class ManyErrorsException : Exception
 {
-    public ManyErrorsException(Dictionary<string, string> errors) : base(string.Join(",", errors))
+    public ManyErrorsException(List<ErrorViewModel> errors) 
+        : base(string.Join(",", errors.Select(error => error.Description)))
     {
-        Errors = errors;
+        Errors = errors.AsReadOnly();
     }
-
-    public IReadOnlyDictionary<string, string> Errors { get; }
+    
+    public IReadOnlyList<ErrorViewModel> Errors { get; }
 }

@@ -1,8 +1,4 @@
-﻿using UserService.Application.Dtos;
-using UserService.Application.UseCases.Commands.AddRolesToUserCommand;
-using UserService.Application.UseCases.Commands.LoginCommand;
-using UserService.Application.UseCases.Commands.RegisterCommand;
-using UserService.Application.ViewModels;
+﻿using UserService.Application.ViewModels;
 using UserService.Domain.Models;
 
 namespace UserService.Application.Profile;

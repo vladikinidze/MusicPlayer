@@ -2,6 +2,7 @@
 using System.Text.Json;
 using FluentValidation;
 using UserService.Application.Exceptions;
+using UserService.Application.ViewModels;
 
 namespace UserService.API.Middleware;
 
@@ -29,34 +30,35 @@ public class JsonResponseExceptionHandlerMiddleware
     private Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         var code = HttpStatusCode.InternalServerError;
-        Dictionary<string, string> errors;
+        IEnumerable<ErrorViewModel> errors;
 
         switch (exception)
         {
             case ManyErrorsException manyErrorsException:
                 code = HttpStatusCode.BadRequest;
-                errors = manyErrorsException.Errors.ToDictionary();
+                errors = manyErrorsException.Errors;
                 break;
             case NotFoundException notFoundException:
                 code = HttpStatusCode.NotFound;
-                errors = new Dictionary<string, string> { { "System", notFoundException.Message } };
+                errors = new List<ErrorViewModel> { new("_", notFoundException.Message) };
                 break;
             case ValidationException validationException:
                 code = HttpStatusCode.BadRequest;
-                errors = new Dictionary<string, string>(
-                    validationException.Errors
-                        .ToDictionary(error => error.PropertyName,
-                            error => error.ErrorMessage));
+                errors = validationException.Errors.Select(error =>
+                    new ErrorViewModel(error.PropertyName, error.ErrorMessage));
                 break;
             default:
-                errors = new Dictionary<string, string> { { "System", exception.Message } };
+                errors = new List<ErrorViewModel> { new("_", exception.Message) };
                 break;
         }
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)code;
 
-        var result = JsonSerializer.Serialize(new { code, errors });
+        var result = JsonSerializer.Serialize(new { code, errors }, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        });
         return context.Response.WriteAsync(result);
     }
 }

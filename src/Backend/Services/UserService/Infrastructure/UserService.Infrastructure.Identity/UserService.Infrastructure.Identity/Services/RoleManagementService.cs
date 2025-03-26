@@ -2,6 +2,7 @@
 using UserService.Application.Dtos;
 using UserService.Application.Exceptions;
 using UserService.Application.Interfaces;
+using UserService.Application.ViewModels;
 using UserService.Infrastructure.Identity.Models;
 
 namespace UserService.Infrastructure.Identity.Services;
@@ -27,7 +28,9 @@ public class RoleManagementService : IRoleManagementService
                 var result = await _roleManager.CreateAsync(new IdentityRole(role));
                 if (!result.Succeeded)
                 {
-                    var errors = result.Errors.ToDictionary(_ => "System", error => error.Description);
+                    var errors = result.Errors
+                        .Select(error => new ErrorViewModel("_", error.Description))
+                        .ToList();
                     throw new ManyErrorsException(errors);
                 }
             }
@@ -45,7 +48,9 @@ public class RoleManagementService : IRoleManagementService
         var result = await _userManager.AddToRolesAsync(user, addRolesToUserDto.Roles);
         if (!result.Succeeded)
         {
-            var errors = result.Errors.ToDictionary(_ => "System", error => error.Description);
+            var errors = result.Errors
+                .Select(error => new ErrorViewModel("_", error.Description))
+                .ToList();
             throw new ManyErrorsException(errors);
         }
     }

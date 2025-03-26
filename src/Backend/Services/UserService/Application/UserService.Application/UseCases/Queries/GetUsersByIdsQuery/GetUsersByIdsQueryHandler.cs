@@ -20,6 +20,6 @@ public class GetUsersByIdsQueryHandler : IRequestHandler<GetUsersByIdsQuery, Use
     {
         var users = await _userQueryService.FindUsersByIdAsync(request.Ids);
         var mappedUsers = _mapper.Map<IEnumerable<UserViewModel>>(users);
-        return new UsersViewModel { Users = mappedUsers };
+        return new UsersViewModel(mappedUsers);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Net.Mail;
+using System.Text.Json;
 
 namespace UserService.Application.Extensions;
 
@@ -10,6 +11,7 @@ public static class StringExtensions
         {
             return false;
         }
+
         try
         {
             var mailAddress = new MailAddress(text);
@@ -19,5 +21,10 @@ public static class StringExtensions
         {
             return false;
         }
+    }
+
+    public static string ToCamelCase(this string text)
+    {
+        return string.IsNullOrEmpty(text) ? text : JsonNamingPolicy.CamelCase.ConvertName(text);
     }
 }
