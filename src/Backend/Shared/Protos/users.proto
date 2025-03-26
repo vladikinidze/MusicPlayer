@@ -1,0 +1,18 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "UserService";
+
+service GrpcUserService {
+  rpc Login(LoginRequest) returns (AuthRequest);
+}
+
+message LoginRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message AuthRequest {
+  string accessToken = 1;
+  string refreshToken = 2;
+  int32 expires_in = 3;
+}

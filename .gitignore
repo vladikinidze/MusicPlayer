@@ -1,0 +1,15 @@
+﻿.vs
+.vscode
+
+**/.idea
+**/bin
+**/obj
+
+**.csproj.DotSettings
+**.csproj.user
+**.jwk
+
+**/appsettings.Development.json
+**/appsettings.Production.json
+
+**/Properties
