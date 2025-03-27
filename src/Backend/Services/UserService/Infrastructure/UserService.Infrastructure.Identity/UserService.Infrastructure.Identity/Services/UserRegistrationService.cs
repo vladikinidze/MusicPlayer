@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using UserService.Application.Constants;
 using UserService.Application.Dtos;
 using UserService.Application.Exceptions;
 using UserService.Application.Interfaces;
@@ -28,7 +29,7 @@ public class UserRegistrationService : IUserRegistrationService
         if (!result.Succeeded)
         {
             var errors = result.Errors
-                .Select(error => new ErrorViewModel("_", error.Description))
+                .Select(error => new ErrorViewModel(ErrorConstants.EmptyPropertyName, error.Description))
                 .ToList();
             throw new ManyErrorsException(errors);
         }

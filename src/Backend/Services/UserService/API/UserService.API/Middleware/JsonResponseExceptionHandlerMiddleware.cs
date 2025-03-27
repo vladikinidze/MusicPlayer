@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using FluentValidation;
+using UserService.Application.Constants;
 using UserService.Application.Exceptions;
 using UserService.Application.ViewModels;
 
@@ -40,7 +41,7 @@ public class JsonResponseExceptionHandlerMiddleware
                 break;
             case NotFoundException notFoundException:
                 code = HttpStatusCode.NotFound;
-                errors = new List<ErrorViewModel> { new("_", notFoundException.Message) };
+                errors = new List<ErrorViewModel> { new(ErrorConstants.EmptyPropertyName, notFoundException.Message) };
                 break;
             case ValidationException validationException:
                 code = HttpStatusCode.BadRequest;
@@ -48,17 +49,18 @@ public class JsonResponseExceptionHandlerMiddleware
                     new ErrorViewModel(error.PropertyName, error.ErrorMessage));
                 break;
             default:
-                errors = new List<ErrorViewModel> { new("_", exception.Message) };
+                errors = new List<ErrorViewModel> { new(ErrorConstants.EmptyPropertyName, exception.Message) };
                 break;
         }
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)code;
 
-        var result = JsonSerializer.Serialize(new { code, errors }, new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        });
+        var result = JsonSerializer.Serialize(new { code, errors },
+            new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            });
         return context.Response.WriteAsync(result);
     }
 }

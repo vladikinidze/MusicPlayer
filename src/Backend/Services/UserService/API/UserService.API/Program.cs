@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using UserService.API.Middleware;
 using UserService.Application;
+using UserService.Infrastructure.Caching;
 using UserService.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddUserIdentity(builder.Configuration);
+builder.Services.AddCaching(builder.Configuration);
 builder.Services.AddRouting(options =>
 {
     options.LowercaseUrls = true;

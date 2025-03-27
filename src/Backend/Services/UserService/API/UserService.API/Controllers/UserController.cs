@@ -4,7 +4,9 @@ using UserService.Application.UseCases.Commands.AddRolesCommand;
 using UserService.Application.UseCases.Commands.AddRolesToUserCommand;
 using UserService.Application.UseCases.Commands.LoginCommand;
 using UserService.Application.UseCases.Commands.RegisterCommand;
+using UserService.Application.UseCases.Queries.GetByUserNameQuery;
 using UserService.Application.UseCases.Queries.GetUserClaimsQuery;
+using UserService.Application.UseCases.Queries.GetUsersByIdsQuery;
 
 namespace UserService.API.Controllers;
 
@@ -52,6 +54,22 @@ public class UserController : ControllerBase
     public async Task<IActionResult> AddRolesToUser([FromBody] AddRolesToUserCommand addRolesToUserCommand)
     {
         var result = await _mediator.Send(addRolesToUserCommand);
+        return Ok(result);
+    }
+
+    [HttpGet("get-by-username/{userName}")]
+    public async Task<IActionResult> GetByUserName(string userName)
+    {
+        var query = new GetByUserNameQuery { UserName = userName };
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpGet("{userId}")]
+    public async Task<IActionResult> GetById(string userId)
+    {
+        var query = new GetUsersByIdsQuery { Ids = new List<string> {userId}};
+        var result = await _mediator.Send(query);
         return Ok(result);
     }
 }

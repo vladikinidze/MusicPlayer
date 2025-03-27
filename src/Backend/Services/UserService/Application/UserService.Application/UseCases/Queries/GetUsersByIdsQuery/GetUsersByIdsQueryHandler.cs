@@ -16,7 +16,7 @@ public class GetUsersByIdsQueryHandler : IRequestHandler<GetUsersByIdsQuery, Use
         _mapper = mapper;
     }
 
-    public async Task<UsersViewModel> Handle(Queries.GetUsersByIdsQuery.GetUsersByIdsQuery request, CancellationToken cancellationToken)
+    public async Task<UsersViewModel> Handle(GetUsersByIdsQuery request, CancellationToken cancellationToken)
     {
         var users = await _userQueryService.FindUsersByIdAsync(request.Ids);
         var mappedUsers = _mapper.Map<IEnumerable<UserViewModel>>(users);
