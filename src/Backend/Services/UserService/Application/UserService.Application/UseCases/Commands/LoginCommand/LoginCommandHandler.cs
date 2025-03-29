@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using UserService.Application.Dtos;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 
 namespace UserService.Application.UseCases.Commands.LoginCommand;
 
@@ -19,6 +19,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, bool>
     public async Task<bool> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var loginUserDto = _mapper.Map<LoginUserDto>(request);
-        return await _userAuthenticationService.LoginUserAsync(loginUserDto);
+        var result = await _userAuthenticationService.LoginUserAsync(loginUserDto);
+        return result;
     }
 }

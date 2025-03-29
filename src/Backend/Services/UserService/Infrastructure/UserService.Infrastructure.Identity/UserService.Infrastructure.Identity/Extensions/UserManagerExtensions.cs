@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using UserService.Application.Extensions;
+using UserService.Domain.Models;
 
 namespace UserService.Infrastructure.Identity.Extensions;
 
@@ -19,5 +21,14 @@ public static class UserManagerExtensions
         }
         
         return user;
+    }
+
+    public static async Task<IList<TUser>> GetUsersByIdsAsync<TUser>(
+        this UserManager<TUser> userManager, IEnumerable<string> userIds)
+        where TUser : IdentityUser
+    {
+        return await userManager.Users
+            .Where(user => userIds.Contains(user.Id))
+            .ToListAsync();
     }
 }

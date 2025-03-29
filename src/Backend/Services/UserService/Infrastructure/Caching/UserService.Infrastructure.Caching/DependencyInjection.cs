@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 
 namespace UserService.Infrastructure.Caching;
 

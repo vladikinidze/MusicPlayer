@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.Application.Dtos;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 using UserService.Infrastructure.Identity.Extensions;
 using UserService.Infrastructure.Identity.Models;
 

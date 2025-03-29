@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using UserService.Application.Exceptions;
-using UserService.Application.Interfaces;
 using UserService.Application.Options;
+using UserService.Application.Services;
 using UserService.Application.ViewModels;
 using UserService.Domain.Models;
 using UserService.Infrastructure.Identity.Extensions;
@@ -44,12 +43,12 @@ public class UserQueryService : IUserQueryService
     public async Task<IEnumerable<IApplicationUser>> FindUsersByIdAsync(IEnumerable<string> ids)
     {
         var userIds = ids.ToList();
-        var cachedUsers = await GetCachedUsersAsync(userIds);
+        var cachedUsers = await _cacheService.GetObjectsAsync<ApplicationUser>(userIds, GetUserCacheKey);
         var missingIds = userIds.Except(cachedUsers.Keys).ToList();
         if (missingIds.Count != 0)
         {
-            var dbUsers = await GetUsersFromDatabaseAsync(missingIds);
-            await SaveUsersToCacheAsync(dbUsers);
+            var dbUsers = await _userManager.GetUsersByIdsAsync(missingIds);
+            await _cacheService.SetObjectsAsync(dbUsers, user => GetUserCacheKey(user.Id), CacheEntryOptions.DefaultOptions);
             foreach (var user in dbUsers)
             {
                 cachedUsers[user.Id] = user;
@@ -62,7 +61,7 @@ public class UserQueryService : IUserQueryService
             .ToList();
         if (errors.Count != 0)
         {
-            throw new ManyErrorsException(errors);
+            throw new AggregateErrorException(errors);
         }
 
         return userIds.Select(id => cachedUsers[id]);
@@ -86,39 +85,6 @@ public class UserQueryService : IUserQueryService
         await _cacheService.SetObjectAsync(cacheKey, user, CacheEntryOptions.DefaultOptions);
 
         return user;
-    }
-
-
-    private async Task<Dictionary<string, ApplicationUser>> GetCachedUsersAsync(IEnumerable<string> ids)
-    {
-        var result = new Dictionary<string, ApplicationUser>();
-        foreach (var id in ids)
-        {
-            var cacheKey = GetUserCacheKey(id);
-            var user = await _cacheService.GetObjectAsync<ApplicationUser>(cacheKey);
-            if (user is not null)
-            {
-                result.Add(id, user);
-            }
-        }
-
-        return result;
-    }
-
-    private async Task<List<ApplicationUser>> GetUsersFromDatabaseAsync(IEnumerable<string> ids)
-    {
-        return await _userManager.Users
-            .Where(user => ids.Contains(user.Id))
-            .ToListAsync();
-    }
-
-    private async Task SaveUsersToCacheAsync(List<ApplicationUser> users)
-    {
-        foreach (var user in users)
-        {
-            var cacheKey = GetUserCacheKey(user.Id);
-            await _cacheService.SetObjectAsync(cacheKey, user, CacheEntryOptions.DefaultOptions);
-        }
     }
 
     private string GetUserCacheKey(string key) => $"app:user:{key}";

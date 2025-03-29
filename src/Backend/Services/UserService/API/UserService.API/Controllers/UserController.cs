@@ -1,10 +1,12 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Application.UseCases.Commands.AddRolesCommand;
 using UserService.Application.UseCases.Commands.AddRolesToUserCommand;
 using UserService.Application.UseCases.Commands.LoginCommand;
 using UserService.Application.UseCases.Commands.RegisterCommand;
 using UserService.Application.UseCases.Queries.GetByUserNameQuery;
+using UserService.Application.UseCases.Queries.GetUserByIdQuery;
 using UserService.Application.UseCases.Queries.GetUserClaimsQuery;
 using UserService.Application.UseCases.Queries.GetUsersByIdsQuery;
 
@@ -35,25 +37,19 @@ public class UserController : ControllerBase
         return Ok(result);
     }
     
-    [HttpGet("claims/{userId}")]
-    public async Task<IActionResult> GetUserClaims(string userId)
+    [HttpGet("{userId}/claims")]
+    public async Task<IActionResult> GetClaims(string userId)
     {
         var command = new GetUserClaimsQuery { UserId = userId };
         var result = await _mediator.Send(command);
         return Ok(result);
     }
-
-    [HttpPost("add-roles")]
-    public async Task<IActionResult> AddRoles([FromBody] AddRolesCommand addRolesCommand)
-    {
-        var result = await _mediator.Send(addRolesCommand);
-        return Ok(result);
-    }
     
-    [HttpPost("add-roles-to-user")]
-    public async Task<IActionResult> AddRolesToUser([FromBody] AddRolesToUserCommand addRolesToUserCommand)
+    [HttpGet("{userId}")]
+    public async Task<IActionResult> GetById(string userId)
     {
-        var result = await _mediator.Send(addRolesToUserCommand);
+        var query = new GetUserByIdQuery { UserId = userId};
+        var result = await _mediator.Send(query);
         return Ok(result);
     }
 
@@ -64,12 +60,26 @@ public class UserController : ControllerBase
         var result = await _mediator.Send(query);
         return Ok(result);
     }
-    
-    [HttpGet("{userId}")]
-    public async Task<IActionResult> GetById(string userId)
+
+    [HttpPost]
+    public async Task<IActionResult> Update()
     {
-        var query = new GetUsersByIdsQuery { Ids = new List<string> {userId}};
-        var result = await _mediator.Send(query);
+        return Ok();
+    }
+    
+    [HttpPost("roles/add")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<IActionResult> AddRoles([FromBody] AddRolesCommand addRolesCommand)
+    {
+        var result = await _mediator.Send(addRolesCommand);
+        return Ok(result);
+    }
+    
+    [HttpPost("roles/add-to-user")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<IActionResult> AddRolesToUser([FromBody] AddRolesToUserCommand addRolesToUserCommand)
+    {
+        var result = await _mediator.Send(addRolesToUserCommand);
         return Ok(result);
     }
 }

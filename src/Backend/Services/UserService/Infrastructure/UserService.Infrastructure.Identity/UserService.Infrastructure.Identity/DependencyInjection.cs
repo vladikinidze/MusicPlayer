@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 using UserService.Infrastructure.Identity.Data;
 using UserService.Infrastructure.Identity.Models;
 using UserService.Infrastructure.Identity.Services;
@@ -22,7 +22,7 @@ public static class DependencyInjection
             {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequiredLength = 8;
-                options.Password.RequireDigit = true;
+                options.Password.RequireDigit = true;   
                 options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequireUppercase = false;
             })
@@ -35,6 +35,7 @@ public static class DependencyInjection
         services.AddTransient<IUserRegistrationService, UserRegistrationService>();
         services.AddTransient<IUserStatusService, UserStatusService>();
         services.AddTransient<IUserClaimsService, UserClaimsService>();
+        services.AddTransient<IUserCommandService, UserCommandService>();
         
         services.ConfigureApplicationCookie(config =>
         {
@@ -42,6 +43,7 @@ public static class DependencyInjection
             config.LoginPath = "/login";
             config.LogoutPath = "/logout";
         });
+        
         return services;
     }
 }

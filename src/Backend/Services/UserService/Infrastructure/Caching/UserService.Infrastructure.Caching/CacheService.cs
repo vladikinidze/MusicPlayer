@@ -2,8 +2,8 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
-using UserService.Application.Interfaces;
 using UserService.Application.Options;
+using UserService.Application.Services;
 
 namespace UserService.Infrastructure.Caching;
 
@@ -25,10 +25,26 @@ public class CacheService : ICacheService
             if (cachedUser is not null)
             {
                 return cachedUser;
-            }
+            }   
         }
 
         return default;
+    }
+
+    public async Task<Dictionary<string, T>> GetObjectsAsync<T>(IEnumerable<string> keys, Func<string, string> keyResolver)
+    {
+        var result = new Dictionary<string, T>();
+        foreach (var key in keys)
+        {
+            var cacheKey = keyResolver(key);
+            var data = await GetObjectAsync<T>(cacheKey);
+            if (data is not null)
+            {
+                result.Add(key, data);
+            }
+        }
+
+        return result;
     }
 
     public async Task SetObjectAsync<T>(string key, T value, CacheEntryOptions options)
@@ -39,7 +55,16 @@ public class CacheService : ICacheService
             SlidingExpiration = options.SlidingExpiration,
         });
     }
-
+    
+    public async Task SetObjectsAsync<T>(IEnumerable<T> objects, Func<T, string> keyResolver, CacheEntryOptions options)
+    {
+        foreach (var data in objects)
+        {
+            var cacheKey = keyResolver(data);
+            await SetObjectAsync(cacheKey, data, options);
+        }
+    }
+    
     public async Task RemoveAsync(string key)
     {
         await _distributedCache.RemoveAsync(HashKey(key));

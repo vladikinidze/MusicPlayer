@@ -1,5 +1,6 @@
 ﻿using MediatR;
-using UserService.Application.Interfaces;
+using UserService.Application.Exceptions;
+using UserService.Application.Services;
 
 namespace UserService.Application.UseCases.Queries.IsUserActiveQuery;
 
@@ -14,6 +15,7 @@ public class IsUserActiveQueryHandler : IRequestHandler<IsUserActiveQuery, bool>
     
     public async Task<bool> Handle(IsUserActiveQuery request, CancellationToken cancellationToken)
     {
-        return await _userStatusService.IsUserActiveAsync(request.UserId);
+        var isActive = await _userStatusService.IsUserActiveAsync(request.UserId);
+        return isActive;
     }
 }

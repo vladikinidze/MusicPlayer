@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using UserService.Application.Constants;
 using UserService.Application.Dtos;
 using UserService.Application.Exceptions;
-using UserService.Application.Interfaces;
-using UserService.Application.ViewModels;
+using UserService.Application.Services;
+using UserService.Infrastructure.Identity.Extensions;
 using UserService.Infrastructure.Identity.Models;
 
 namespace UserService.Infrastructure.Identity.Services;
@@ -29,10 +28,8 @@ public class RoleManagementService : IRoleManagementService
                 var result = await _roleManager.CreateAsync(new IdentityRole(role));
                 if (!result.Succeeded)
                 {
-                    var errors = result.Errors
-                        .Select(error => new ErrorViewModel(ErrorConstants.EmptyPropertyName, error.Description))
-                        .ToList();
-                    throw new ManyErrorsException(errors);
+                    var errors = result.Errors.ToErrorViewModels();
+                    throw new AggregateErrorException(errors.ToList());
                 }
             }
         }
@@ -49,10 +46,8 @@ public class RoleManagementService : IRoleManagementService
         var result = await _userManager.AddToRolesAsync(user, addRolesToUserDto.Roles);
         if (!result.Succeeded)
         {
-            var errors = result.Errors
-                .Select(error => new ErrorViewModel(ErrorConstants.EmptyPropertyName, error.Description))
-                .ToList();
-            throw new ManyErrorsException(errors);
+            var errors = result.Errors.ToErrorViewModels();
+            throw new AggregateErrorException(errors.ToList());
         }
     }
 }

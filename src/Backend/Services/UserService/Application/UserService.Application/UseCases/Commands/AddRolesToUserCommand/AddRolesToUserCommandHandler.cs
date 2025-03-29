@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using UserService.Application.Dtos;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 
 namespace UserService.Application.UseCases.Commands.AddRolesToUserCommand;
 

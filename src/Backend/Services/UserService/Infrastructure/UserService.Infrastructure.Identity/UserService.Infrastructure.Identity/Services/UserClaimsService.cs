@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using UserService.Application.Dtos;
 using UserService.Application.Exceptions;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 using UserService.Infrastructure.Identity.Models;
 
 namespace UserService.Infrastructure.Identity.Services;
@@ -24,19 +23,14 @@ public class UserClaimsService : IUserClaimsService
             throw new NotFoundException("User", userId);
         }
 
-        var claimsTask = _userManager.GetClaimsAsync(user);
-        var rolesTask = _userManager.GetRolesAsync(user);
+        var claimsTask = await _userManager.GetClaimsAsync(user);
+        var rolesTask = await _userManager.GetRolesAsync(user);
 
-        await Task.WhenAll(claimsTask, rolesTask);
-
-        var claims = claimsTask.Result
+        var claims = claimsTask
             .Select(claim => new ClaimDto(claim.Type, claim.Value))
             .ToList();
 
-        var roles = rolesTask.Result.ToList();
-        
-        var result = new UserClaimsDto(user.Id, roles, claims);
-        
-        return result;
+        var roles = rolesTask.ToList();
+        return new UserClaimsDto(user.Id, roles, claims);
     }
 }

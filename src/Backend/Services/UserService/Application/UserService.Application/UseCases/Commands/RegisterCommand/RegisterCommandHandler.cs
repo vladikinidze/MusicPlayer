@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using UserService.Application.Dtos;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 
 namespace UserService.Application.UseCases.Commands.RegisterCommand;
 
@@ -19,6 +19,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, bool>
     public async Task<bool> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         var registerUserDto = _mapper.Map<RegisterUserDto>(request);
-        return await _userRegistrationService.RegisterUserAsync(registerUserDto);
+        var result = await _userRegistrationService.RegisterUserAsync(registerUserDto);
+        return result;
     }
 }

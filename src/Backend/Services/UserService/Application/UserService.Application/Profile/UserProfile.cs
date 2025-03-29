@@ -2,6 +2,7 @@
 using UserService.Application.UseCases.Commands.AddRolesToUserCommand;
 using UserService.Application.UseCases.Commands.LoginCommand;
 using UserService.Application.UseCases.Commands.RegisterCommand;
+using UserService.Application.UseCases.Commands.UpdateCommand;
 using UserService.Application.ViewModels;
 using UserService.Domain.Models;
 
@@ -17,6 +18,7 @@ public class UserProfile : AutoMapper.Profile
 
         CreateMap<LoginCommand, LoginUserDto>();
         CreateMap<RegisterCommand, RegisterUserDto>();
+        CreateMap<UpdateCommand, UpdateUserDto>();
         CreateMap<AddRolesToUserCommand, AddRolesToUserDto>();
     }
 }

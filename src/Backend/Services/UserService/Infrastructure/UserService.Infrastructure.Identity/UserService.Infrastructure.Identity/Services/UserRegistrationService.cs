@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using UserService.Application.Constants;
 using UserService.Application.Dtos;
 using UserService.Application.Exceptions;
-using UserService.Application.Interfaces;
-using UserService.Application.ViewModels;
+using UserService.Application.Services;
+using UserService.Infrastructure.Identity.Extensions;
 using UserService.Infrastructure.Identity.Models;
 
 namespace UserService.Infrastructure.Identity.Services;
@@ -25,16 +24,13 @@ public class UserRegistrationService : IUserRegistrationService
             Email = registerUserDto.Email,
             RegisteredAt = DateTime.UtcNow,
         };
-        var result = await _userManager.CreateAsync(applicationUser, registerUserDto.Password);
-        if (!result.Succeeded)
+        var creationResult = await _userManager.CreateAsync(applicationUser, registerUserDto.Password);
+        if (!creationResult.Succeeded)
         {
-            var errors = result.Errors
-                .Select(error => new ErrorViewModel(ErrorConstants.EmptyPropertyName, error.Description))
-                .ToList();
-            throw new ManyErrorsException(errors);
+            var errors = creationResult.Errors.ToErrorViewModels();
+            throw new AggregateErrorException(errors.ToList());
         }
-
-        await _userManager.AddToRoleAsync(applicationUser, "user");
-        return result.Succeeded;
+        
+        return creationResult.Succeeded;
     }
 }

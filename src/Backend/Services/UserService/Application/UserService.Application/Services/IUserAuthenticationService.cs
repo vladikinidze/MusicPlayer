@@ -1,6 +1,6 @@
 ﻿using UserService.Application.Dtos;
 
-namespace UserService.Application.Interfaces;
+namespace UserService.Application.Services;
 
 public interface IUserAuthenticationService
 {

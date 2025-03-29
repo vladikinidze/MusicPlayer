@@ -35,7 +35,7 @@ public class JsonResponseExceptionHandlerMiddleware
 
         switch (exception)
         {
-            case ManyErrorsException manyErrorsException:
+            case AggregateErrorException manyErrorsException:
                 code = HttpStatusCode.BadRequest;
                 errors = manyErrorsException.Errors;
                 break;

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 using UserService.Application.ViewModels;
 
 namespace UserService.Application.UseCases.Queries.GetUserByIdQuery;
@@ -18,8 +18,8 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserVie
     
     public async Task<UserViewModel> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        var users = await _userQueryService.FindUserByIdAsync(request.UserId);
-        var userViewModel = _mapper.Map<UserViewModel>(users);
+        var user = await _userQueryService.FindUserByIdAsync(request.UserId);
+        var userViewModel = _mapper.Map<UserViewModel>(user);
         return userViewModel;
     }
 }

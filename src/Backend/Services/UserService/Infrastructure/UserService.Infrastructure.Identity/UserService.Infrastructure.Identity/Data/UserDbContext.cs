@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 using UserService.Infrastructure.Identity.Models;
 
 namespace UserService.Infrastructure.Identity.Data;

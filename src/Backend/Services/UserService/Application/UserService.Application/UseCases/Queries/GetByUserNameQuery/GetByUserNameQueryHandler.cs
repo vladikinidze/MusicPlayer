@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 using UserService.Application.ViewModels;
 
 namespace UserService.Application.UseCases.Queries.GetByUserNameQuery;
@@ -18,8 +18,8 @@ public class GetByUserNameQueryHandler : IRequestHandler<GetByUserNameQuery, Use
     
     public async Task<UserViewModel> Handle(GetByUserNameQuery request, CancellationToken cancellationToken)
     {
-        var result = await _userQueryService.FindByEmailOrUserNameAsync(request.UserName);
-        var user = _mapper.Map<UserViewModel>(result);
-        return user;
+        var user = await _userQueryService.FindByEmailOrUserNameAsync(request.UserName);
+        var userViewModel = _mapper.Map<UserViewModel>(user);
+        return userViewModel;
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 using UserService.Infrastructure.Identity.Models;
 
 namespace UserService.Infrastructure.Identity.Services;
@@ -16,6 +16,7 @@ public class UserStatusService : IUserStatusService
     public async Task<bool> IsUserActiveAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        return user is not null && !await _userManager.IsLockedOutAsync(user);
+        var result = user is not null && !await _userManager.IsLockedOutAsync(user);
+        return result;
     }
 }

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using UserService.Application.Interfaces;
+using UserService.Application.Services;
 
 namespace UserService.Application.UseCases.Commands.AddRolesCommand;
 

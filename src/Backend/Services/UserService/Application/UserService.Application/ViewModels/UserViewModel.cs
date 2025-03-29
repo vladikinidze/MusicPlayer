@@ -1,3 +1,7 @@
 ﻿namespace UserService.Application.ViewModels;
 
-public record UserViewModel(string DisplayName, string Email);
+public class UserViewModel
+{
+    public string DisplayName { get; init; } = null!;
+    public string Email { get; init; } = null!;
+}

@@ -1,3 +1,7 @@
 ﻿namespace UserService.Application.ViewModels;
 
-public record UsersViewModel (IEnumerable<UserViewModel> Users);
+public class UsersViewModel
+{
+    public IEnumerable<UserViewModel> Users { get; set; } = null!;
+
+}
