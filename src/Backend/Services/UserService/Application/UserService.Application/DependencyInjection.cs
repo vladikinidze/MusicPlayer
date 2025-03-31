@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using UserService.Application.Behaviours;
+using UserService.Application.Common.Behaviours;
 
 namespace UserService.Application;
 

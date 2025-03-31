@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Text.Json;
 using FluentValidation;
-using UserService.Application.Constants;
-using UserService.Application.Exceptions;
+using UserService.Application.Common.Constants;
 using UserService.Application.ViewModels;
+using UserService.Domain.Exceptions;
 
 namespace UserService.API.Middleware;
 

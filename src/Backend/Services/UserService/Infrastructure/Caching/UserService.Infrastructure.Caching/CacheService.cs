@@ -2,8 +2,8 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
-using UserService.Application.Options;
-using UserService.Application.Services;
+using UserService.Application.Common.Options;
+using UserService.Application.Interfaces.Caching;
 
 namespace UserService.Infrastructure.Caching;
 

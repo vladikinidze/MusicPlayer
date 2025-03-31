@@ -1,3 +1,5 @@
-﻿namespace UserService.Application.Dtos;
+﻿using UserService.Domain.Models;
 
-public record AddRolesToUserDto(string UserId, IEnumerable<string> Roles);
+namespace UserService.Application.Dtos;
+
+public record AddRolesToUserDto(IApplicationUser User, IEnumerable<string> Roles);

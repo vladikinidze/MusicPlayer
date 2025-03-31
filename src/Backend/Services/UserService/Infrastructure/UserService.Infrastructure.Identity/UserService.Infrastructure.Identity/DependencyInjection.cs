@@ -2,10 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UserService.Application.Services;
+using UserService.Infrastructure.Identity.Adapters;
 using UserService.Infrastructure.Identity.Data;
+using UserService.Infrastructure.Identity.Interfaces;
 using UserService.Infrastructure.Identity.Models;
-using UserService.Infrastructure.Identity.Services;
 
 namespace UserService.Infrastructure.Identity;
 
@@ -28,21 +28,8 @@ public static class DependencyInjection
             })
             .AddEntityFrameworkStores<UserDbContext>()
             .AddDefaultTokenProviders();
-        
-        services.AddTransient<IRoleManagementService, RoleManagementService>();
-        services.AddTransient<IUserAuthenticationService, UserAuthenticationService>();
-        services.AddTransient<IUserQueryService, UserQueryService>();
-        services.AddTransient<IUserRegistrationService, UserRegistrationService>();
-        services.AddTransient<IUserStatusService, UserStatusService>();
-        services.AddTransient<IUserClaimsService, UserClaimsService>();
-        services.AddTransient<IUserCommandService, UserCommandService>();
-        
-        services.ConfigureApplicationCookie(config =>
-        {
-            config.Cookie.Name = "music.web.api";
-            config.LoginPath = "/login";
-            config.LogoutPath = "/logout";
-        });
+
+        services.AddSingleton<IUserCaster, UserCaster>();
         
         return services;
     }

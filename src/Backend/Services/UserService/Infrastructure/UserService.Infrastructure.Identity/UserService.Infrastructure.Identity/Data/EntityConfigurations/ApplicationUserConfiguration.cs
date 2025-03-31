@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UserService.Infrastructure.Identity.Models;
 
-namespace UserService.Infrastructure.Identity.EntityConfigurations;
+namespace UserService.Infrastructure.Identity.Data.EntityConfigurations;
 
 public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 {

@@ -18,4 +18,9 @@
       <ProjectReference Include="..\..\Domain\UserService.Domain\UserService.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Common\Types\" />
+      <Folder Include="Features\Roles\" />
+    </ItemGroup>
+
 </Project>

@@ -1,14 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Application.UseCases.Commands.AddRolesCommand;
-using UserService.Application.UseCases.Commands.AddRolesToUserCommand;
-using UserService.Application.UseCases.Commands.LoginCommand;
-using UserService.Application.UseCases.Commands.RegisterCommand;
-using UserService.Application.UseCases.Queries.GetByUserNameQuery;
-using UserService.Application.UseCases.Queries.GetUserByIdQuery;
-using UserService.Application.UseCases.Queries.GetUserClaimsQuery;
-using UserService.Application.UseCases.Queries.GetUsersByIdsQuery;
+using UserService.Application.User.Commands.AddRolesCommand;
+using UserService.Application.User.Commands.AddRolesToUserCommand;
+using UserService.Application.User.Commands.LoginCommand;
+using UserService.Application.User.Commands.RegisterCommand;
+using UserService.Application.User.Queries.GetByUserNameQuery;
+using UserService.Application.User.Queries.GetUserByIdQuery;
+using UserService.Application.User.Queries.GetUserClaimsQuery;
 
 namespace UserService.API.Controllers;
 

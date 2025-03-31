@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using UserService.Application.Extensions;
-using UserService.Domain.Models;
 
 namespace UserService.Infrastructure.Identity.Extensions;
 
 public static class UserManagerExtensions
 {
-    public static async Task<TUser?> FindByEmailOrUserNameAsync<TUser>(this UserManager<TUser> manager, string login)
+    public static async Task<TUser?> FindByLoginAsync<TUser>(this UserManager<TUser> manager, 
+        string login, Func<string, bool> isEmailValidator)
         where TUser : IdentityUser
     {
+        if (string.IsNullOrWhiteSpace(login))
+        {
+            return null;
+        }
         TUser? user;
-        if (login.IsEmail())
+        if (isEmailValidator(login))
         {
             user = await manager.FindByEmailAsync(login);
         }
@@ -27,8 +30,15 @@ public static class UserManagerExtensions
         this UserManager<TUser> userManager, IEnumerable<string> userIds)
         where TUser : IdentityUser
     {
+        if (userIds is null || userIds.TryGetNonEnumeratedCount(out var count) || count == 0)
+        {
+            return new List<TUser>();
+        }
+        
+        var idSet = new HashSet<string>(userIds);
         return await userManager.Users
-            .Where(user => userIds.Contains(user.Id))
+            .Where(user => idSet.Contains(user.Id))
+            .AsNoTracking()
             .ToListAsync();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UserService.Application.Services;
+using UserService.Application.Interfaces.Caching;
 
 namespace UserService.Infrastructure.Caching;
 
